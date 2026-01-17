@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muhamad Zidan | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* CORE BACKGROUND - DEEP SPACE GRADIENT */
+        body { 
+            background-color: #020617; 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ANIMATED MESH GRADIENT OVERLAY */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(249, 115, 22, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: pulseBg 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseBg {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* LOADING SCREEN */
+        #preloader { position: fixed; inset: 0; background: #020617; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; transition: transform 1s cubic-bezier(1, 0, 0, 1); }
+        .page-loaded #preloader { transform: translateY(-100%); }
+        .loader-name { font-size: 2.5rem; font-weight: 900; background: linear-gradient(to right, #3b82f6, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5)); }
+        .typewriter { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #64748b; border-right: 2px solid #f97316; white-space: nowrap; overflow: hidden; width: 0; animation: typing 2.5s steps(30, end) forwards, blink 0.8s infinite; }
+        
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink { 50% { border-color: transparent } }
+        @keyframes loading { 0% { width: 0; } 100% { width: 100%; } }
+
+        /* ADVANCED CARDS */
+        .id-card { 
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(249, 115, 22, 0.2); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            transition: 0.5s; 
+            position: relative; 
+            overflow: hidden; 
+        }
+        .id-card:hover { transform: translateY(-10px); border-color: #f97316; box-shadow: 0 0 40px rgba(249, 115, 22, 0.2); }
+        
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+            transition: all 0.4s ease; 
+        }
+        .glass-card:hover { 
+            transform: scale(1.02) translateY(-5px); 
+            background: rgba(255, 255, 255, 0.07); 
+            border-color: #3b82f6; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
+        }
+        
+        /* NAV BLUR */
+        nav { background: rgba(2, 6, 23, 0.7) !important; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .admin-only { display: none !important; }
+        .is-admin .admin-only { display: flex !important; }
+        .tab-btn { padding: 8px 24px; border-radius: 12px; transition: 0.3s; color: #94a3b8; font-weight: 600; cursor: pointer; border: 1px solid transparent; }
+        .tab-btn.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: white; }
+        
+        #upload-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 20000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        #upload-modal.active { display: flex; }
+
+        .floating { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        
+        /* GLOW EFFECT ON TEXT */
+        .glow-text { text-shadow: 0 0 15px rgba(249, 115, 22, 0.3); }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+    <canvas id="particleCanvas" class="fixed inset-0 -z-10 opacity-40"></canvas>
+
+    <div id="preloader">
+        <h1 class="loader-name">MUHAMAD ZIDAN</h1>
+        <div class="flex items-center"><span class="typewriter">www.zidan-portfolio.web.id</span></div>
+        <div class="mt-12 w-48 h-1 bg-slate-900 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-500 animate-[loading_3s_ease-in-out_forwards]"></div>
+        </div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 p-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div id="admin-trigger" class="text-2xl font-black text-blue-500 cursor-pointer hover:scale-110 transition">MZ</div>
+            <div class="flex gap-6 items-center text-[11px] uppercase font-bold tracking-widest">
+                <a href="#about" class="hover:text-blue-400 transition">About</a>
+                <a href="#showcase" class="hover:text-blue-400 transition">Project</a>
+                <a href="#contact" class="hover:text-blue-400 transition">Contact</a>
+                <button id="logout-btn" class="admin-only bg-red-500/20 text-red-500 px-3 py-1 rounded hover:bg-red-600 hover:text-white transition">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="main-content">
+        <section id="about" class="pt-32 pb-20 px-6 max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-12 gap-12 items-center">
+                <div class="md:col-span-5 flex justify-center" data-aos="fade-right">
+                    <div class="id-card w-full max-w-[340px] rounded-[2.5rem] p-8 text-center floating">
+                        <div class="w-full aspect-square bg-slate-800 rounded-3xl mb-6 overflow-hidden border-2 border-white/5 relative group">
+                            <img id="profile-img" src="" class="hidden w-full h-full object-cover">
+                            <div id="initials" class="w-full h-full flex items-center justify-center text-7xl font-black bg-slate-900 text-slate-700">MZ</div>
+                            <label class="admin-only absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition">
+                                <input type="file" id="inp-profile" class="hidden" accept="image/*">
+                                <span class="text-xs font-bold">CHANGE PHOTO</span>
+                            </label>
+                        </div>
+                        <h3 class="text-2xl font-black tracking-tighter uppercase glow-text">MUHAMAD ZIDAN</h3>
+                        <p class="text-orange-500 font-bold text-xs tracking-[0.3em] uppercase mb-6">Fullstack Developer</p>
+                        <div id="skills-container" class="grid grid-cols-3 gap-2"></div>
+                        <button onclick="addSkill()" class="admin-only mt-4 text-[10px] text-blue-400 font-bold underline">+ ADD SKILL</button>
+                    </div>
+                </div>
+                <div class="md:col-span-7" data-aos="fade-left">
+                    <h1 class="text-5xl md:text-6xl font-black mb-6 leading-none uppercase">HELLO, I'M <br><span class="text-orange-500 animate-pulse glow-text">ZIDAN!</span> 👋</h1>
+                    <div id="about-desc" class="editable text-gray-400 leading-relaxed text-lg mb-10 p-4 border-l-2 border-orange-500/30 bg-orange-500/5 rounded-r-xl">Memuat biografi...</div>
+                    <button class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-sm hover:bg-orange-500 transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20">DOWNLOAD CV 📥</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="showcase" class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
+            <h2 class="text-center text-4xl font-black mb-12 tracking-tighter uppercase italic" data-aos="zoom-in">Showcase<span class="text-blue-500">Portofolio</span></h2>
+            <div class="flex justify-center gap-4 mb-16" data-aos="fade-up">
+                <button onclick="switchTab('projects')" id="btn-projects" class="tab-btn active">PROJECTS</button>
+                <button onclick="switchTab('certs')" id="btn-certs" class="tab-btn">CERTIFICATES</button>
+            </div>
+            
+            <div id="projects-content" class="tab-content" data-aos="fade-up">
+                <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+                <div class="text-center mt-12 admin-only"><button onclick="openUploadModal('projects')" class="bg-orange-600 px-8 py-3 rounded-xl font-bold hover:bg-orange-500 transition shadow-xl shadow-orange-600/20">+ NEW PROJECT</button></div>
+            </div>
+            
+            <div id="certs-content" class="tab-content hidden" data-aos="fade-up">
+                <div id="certs-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+                <div class="text-center mt-12 admin-only"><button onclick="openUploadModal('certs')" class="bg-purple-600 px-8 py-3 rounded-xl font-bold hover:bg-purple-500 transition shadow-xl shadow-purple-600/20">+ NEW CERTIFICATE</button></div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 px-6 max-w-4xl mx-auto" data-aos="fade-up">
+            <div class="glass-card rounded-[2.5rem] p-10 border-t-4 border-blue-600 relative overflow-hidden bg-slate-900/40">
+                <div class="absolute -top-10 -right-10 opacity-5 text-[12rem] font-black italic select-none">MZ</div>
+                <h2 class="text-3xl font-black mb-8 uppercase italic">Get In Touch</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <a href="https://www.linkedin.com/in/muhamad-zidan-38235237b" target="_blank" class="block p-5 bg-white/5 rounded-2xl border border-white/5 hover:border-blue-500 transition-all group hover:bg-blue-500/5">
+                            <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">LinkedIn</p>
+                            <p class="font-bold group-hover:text-blue-400 transition">Muhamad Zidan ↗</p>
+                        </a>
+                        <a href="https://www.instagram.com/nigh.tdan?igsh=eGc1bndlZW9xbzdt&utm_source=qr" target="_blank" class="block p-5 bg-white/5 rounded-2xl border border-white/5 hover:border-pink-500 transition-all group hover:bg-pink-500/5">
+                            <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Instagram</p>
+                            <p class="font-bold group-hover:text-pink-400 transition">@nigh.tdan ↗</p>
+                        </a>
+                        <a href="mailto:zidan220906@gmail.com" class="block p-5 bg-white/5 rounded-2xl border border-white/5 hover:border-orange-500 transition-all group hover:bg-orange-500/5">
+                            <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Email</p>
+                            <p class="font-bold group-hover:text-orange-400 transition">zidan220906@gmail.com ✉</p>
+                        </a>
+                    </div>
+                    <div class="flex items-center p-6 bg-blue-500/5 rounded-2xl border border-blue-500/10 italic text-gray-400 text-sm leading-loose">
+                        Bersemangat untuk berkolaborasi dalam proyek inovatif. Silakan hubungi saya kapan saja!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <button id="save-btn" class="admin-only fixed bottom-10 right-10 bg-green-500 text-white px-10 py-4 rounded-full shadow-2xl font-black transition-all hover:scale-110 active:scale-90 z-[9999]">💾 SAVE ALL CHANGES</button>
+    </div>
+
+    <div id="upload-modal">
+        <div class="bg-slate-900 p-8 rounded-[2rem] border border-white/10 w-full max-w-md">
+            <h3 class="text-xl font-black mb-6 uppercase">Upload Item</h3>
+            <div class="space-y-4">
+                <input type="text" id="modal-name" placeholder="Title" class="w-full bg-black border border-white/10 p-3 rounded-xl outline-none focus:border-blue-500 transition">
+                <input type="text" id="modal-extra" placeholder="Issuer (For Cert Only)" class="w-full bg-black border border-white/10 p-3 rounded-xl outline-none focus:border-blue-500 transition">
+                <div class="border-2 border-dashed border-white/10 p-6 rounded-xl text-center cursor-pointer relative hover:border-blue-500 transition group">
+                    <span id="file-status" class="text-xs text-gray-400 group-hover:text-blue-400">Click to Select Image</span>
+                    <input type="file" id="modal-file" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*">
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="closeUploadModal()" class="flex-1 bg-slate-800 py-3 rounded-xl font-bold hover:bg-slate-700 transition">Cancel</button>
+                    <button onclick="handleUpload()" class="flex-1 bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition">Add Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyCI1sCEjXqsuUtOgoAOLbY5q0PfmtDVHGk", authDomain: "nichi-efeef.firebaseapp.com", projectId: "nichi-efeef", storageBucket: "nichi-efeef.firebasestorage.app", messagingSenderId: "874414832026", appId: "1:874414832026:web:28b2a04dc674b78f50a223" };
+        const db = getFirestore(initializeApp(firebaseConfig));
+        let myData = { about: "", photo: "", skills: [], projects: [], certs: [] };
+        let currentUploadType = "";
+        let tempBase64 = "";
+
+        // PARTICLE CANVAS LOGIC
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<60; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(59, 130, 246, 0.5)";
+            particles.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fill();
+
+                for(let j=i+1; j<particles.length; j++) {
+                    const p2 = particles[j];
+                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if(dist < 150) {
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${1 - dist/150})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas(); animateParticles();
+
+        AOS.init({ duration: 1000, once: true });
+
+        const compressImage = (file) => new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 600;
+                    const scale = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scale;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.6));
+                };
+            };
+        });
+
+        async function loadData() {
+            try {
+                const snap = await getDoc(doc(db, "portfolio", "zidan-data"));
+                if (snap.exists()) {
+                    myData = snap.data();
+                    document.getElementById('about-desc').innerHTML = myData.about || "Fullstack Developer";
+                    if (myData.photo) {
+                        const img = document.getElementById('profile-img');
+                        img.src = myData.photo; img.classList.remove('hidden');
+                        document.getElementById('initials').classList.add('hidden');
+                    }
+                    render();
+                }
+            } catch (e) { console.error(e); }
+            setTimeout(() => { 
+                document.body.classList.add('page-loaded'); 
+                document.body.style.overflow = 'auto';
+                AOS.refresh();
+            }, 3000);
+        }
+
+        function render() {
+            const isAdmin = localStorage.getItem('isZidanAdmin');
+            if(isAdmin) { document.body.classList.add('is-admin'); document.getElementById('about-desc').contentEditable = true; }
+
+            const skillsHTML = (myData.skills || []).map((s, i) => `
+                <div class="bg-blue-500/10 border border-blue-500/20 p-2 rounded-xl text-[9px] font-bold relative group hover:border-blue-400 transition">
+                    ${isAdmin ? `<button onclick="window.delS(${i})" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] z-50 cursor-pointer shadow-lg hover:scale-125 transition">✕</button>` : ''}
+                    ${s.name}
+                </div>
+            `).join('');
+            
+            const resetBtn = (isAdmin && (myData.skills || []).length > 0) ? `<div class="col-span-3 text-center"><button onclick="window.resetSkills()" class="text-[8px] text-red-500 font-bold hover:underline">🗑 RESET ALL SKILLS</button></div>` : '';
+            document.getElementById('skills-container').innerHTML = skillsHTML + resetBtn;
+
+            document.getElementById('projects-grid').innerHTML = (myData.projects || []).map((p, i) => `
+                <div class="glass-card rounded-[2rem] overflow-hidden group border border-white/5 relative" data-aos="zoom-in">
+                    <img src="${p.img || ''}" class="w-full h-44 object-cover group-hover:scale-110 transition duration-700">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-sm mb-2 uppercase group-hover:text-blue-400 transition">${p.name}</h3>
+                        ${isAdmin ? `<button onclick="window.delP(${i})" class="text-red-500 text-[10px] font-bold underline cursor-pointer hover:text-red-400">DELETE</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('certs-grid').innerHTML = (myData.certs || []).map((c, i) => `
+                <div class="glass-card rounded-[2rem] overflow-hidden group border border-white/5 relative" data-aos="zoom-in">
+                    <img src="${c.img || ''}" class="w-full h-44 object-cover group-hover:scale-110 transition duration-700">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-sm mb-1 uppercase group-hover:text-purple-400 transition">${c.name}</h3>
+                        <p class="text-purple-400 text-[10px] font-bold mb-3">${c.issuer || 'Zidan Cert'}</p>
+                        ${isAdmin ? `<button onclick="window.delC(${i})" class="text-red-500 text-[10px] font-bold underline cursor-pointer hover:text-red-400">DELETE</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            AOS.refresh();
+        }
+
+        async function forceSyncData() {
+            const cleanSkills = (myData.skills || []).filter(s => s && s.name && s.name.trim() !== "");
+            const dataToSave = { ...myData, skills: cleanSkills, about: document.getElementById('about-desc').innerHTML };
+            try { await setDoc(doc(db, "portfolio", "zidan-data"), dataToSave); } catch (e) { console.error(e); }
+        }
+
+        window.delS = (i) => { myData.skills.splice(i, 1); render(); forceSyncData(); };
+        window.resetSkills = () => { if(confirm("Reset semua skill?")) { myData.skills = []; render(); forceSyncData(); } };
+        window.delP = (i) => { myData.projects.splice(i, 1); render(); };
+        window.delC = (i) => { myData.certs.splice(i, 1); render(); };
+
+        document.getElementById('inp-profile').onchange = async (e) => {
+            if (e.target.files[0]) {
+                myData.photo = await compressImage(e.target.files[0]);
+                document.getElementById('profile-img').src = myData.photo;
+                document.getElementById('profile-img').classList.remove('hidden');
+                document.getElementById('initials').classList.add('hidden');
+            }
+        };
+
+        window.openUploadModal = (type) => { currentUploadType = type; document.getElementById('upload-modal').classList.add('active'); tempBase64 = ""; document.getElementById('file-status').innerText = "Click to Select Image"; };
+        window.closeUploadModal = () => document.getElementById('upload-modal').classList.remove('active');
+        document.getElementById('modal-file').onchange = async (e) => { if (e.target.files[0]) { tempBase64 = await compressImage(e.target.files[0]); document.getElementById('file-status').innerText = "Image Selected ✅"; } };
+
+        window.handleUpload = () => {
+            const name = document.getElementById('modal-name').value;
+            if (!name || !tempBase64) return alert("Fill name and select image!");
+            if (currentUploadType === 'projects') myData.projects.push({ name, img: tempBase64 });
+            else myData.certs.push({ name, issuer: document.getElementById('modal-extra').value || 'Zidan Cert', img: tempBase64 });
+            render(); closeUploadModal();
+        };
+
+        window.addSkill = () => { const n = prompt("Skill Name:"); if(n) { if(!myData.skills) myData.skills = []; myData.skills.push({name:n}); render(); forceSyncData(); } };
+        window.switchTab = (t) => {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`${t}-content`).classList.remove('hidden');
+            document.getElementById(`btn-${t}`).classList.add('active');
+            AOS.refresh();
+        };
+
+        document.getElementById('save-btn').onclick = async () => {
+            document.getElementById('save-btn').innerText = "SYNCING...";
+            try { 
+                const cleanData = { ...myData, about: document.getElementById('about-desc').innerHTML, skills: (myData.skills || []).filter(s => s && s.name) };
+                await setDoc(doc(db, "portfolio", "zidan-data"), cleanData); 
+                alert("Cloud Sync Successful!"); 
+            } catch (e) { alert("Error: Data too big!"); }
+            document.getElementById('save-btn').innerText = "💾 SAVE ALL CHANGES";
+        };
+
+        let hit = 0;
+        document.getElementById('admin-trigger').onclick = () => { if(++hit >= 5) { if(prompt("Pass:") === "zidan123") { localStorage.setItem('isZidanAdmin','true'); location.reload(); } hit=0; } };
+        document.getElementById('logout-btn').onclick = () => { localStorage.removeItem('isZidanAdmin'); location.reload(); };
+
+        loadData();
+    </script>
+</body>
+</html>
