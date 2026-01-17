@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        /* CORE BACKGROUND - DEEP SPACE GRADIENT */
         body { 
             background-color: #020617; 
             color: white; 
@@ -18,7 +17,6 @@
             position: relative;
         }
 
-        /* ANIMATED MESH GRADIENT OVERLAY */
         body::before {
             content: "";
             position: fixed;
@@ -35,7 +33,6 @@
             100% { transform: scale(1.2); opacity: 1; }
         }
 
-        /* LOADING SCREEN */
         #preloader { position: fixed; inset: 0; background: #020617; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; transition: transform 1s cubic-bezier(1, 0, 0, 1); }
         .page-loaded #preloader { transform: translateY(-100%); }
         .loader-name { font-size: 2.5rem; font-weight: 900; background: linear-gradient(to right, #3b82f6, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5)); }
@@ -45,7 +42,6 @@
         @keyframes blink { 50% { border-color: transparent } }
         @keyframes loading { 0% { width: 0; } 100% { width: 100%; } }
 
-        /* ADVANCED CARDS */
         .id-card { 
             background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(20px);
@@ -70,7 +66,6 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
         }
         
-        /* NAV BLUR */
         nav { background: rgba(2, 6, 23, 0.7) !important; backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
 
         .admin-only { display: none !important; }
@@ -84,7 +79,6 @@
         .floating { animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
         
-        /* GLOW EFFECT ON TEXT */
         .glow-text { text-shadow: 0 0 15px rgba(249, 115, 22, 0.3); }
     </style>
 </head>
@@ -134,7 +128,7 @@
                 <div class="md:col-span-7" data-aos="fade-left">
                     <h1 class="text-5xl md:text-6xl font-black mb-6 leading-none uppercase">HELLO, I'M <br><span class="text-orange-500 animate-pulse glow-text">ZIDAN!</span> 👋</h1>
                     <div id="about-desc" class="editable text-gray-400 leading-relaxed text-lg mb-10 p-4 border-l-2 border-orange-500/30 bg-orange-500/5 rounded-r-xl">Memuat biografi...</div>
-                    <button class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-sm hover:bg-orange-500 transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20">DOWNLOAD CV 📥</button>
+                    <a href="https://drive.google.com/file/d/1ZbYlp5IveBzBo_mw5KtoJAXru_bX-dx0/view?usp=sharing" target="_blank" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-sm hover:bg-orange-500 transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20 inline-block">DOWNLOAD CV 📥</a>
                 </div>
             </div>
         </section>
@@ -215,7 +209,6 @@
         let currentUploadType = "";
         let tempBase64 = "";
 
-        // PARTICLE CANVAS LOGIC
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
